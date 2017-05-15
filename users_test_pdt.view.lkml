@@ -1,4 +1,4 @@
-view: users_test {
+view: users_test_pdt {
   derived_table: {
     sql:select id,state
     from users
