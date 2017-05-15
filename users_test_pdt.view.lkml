@@ -1,9 +1,16 @@
 view: users_test {
-
   derived_table: {
-    sql:select state from users where {% condition state_filter %} state {% endcondition %};;
+    sql:select id,state
+    from users
+    where {% condition state_filter %} state {% endcondition %};;
     sql_trigger_value: SELECT 1;;
     indexes: ["state"]
+  }
+
+  dimension: id {
+    type: string
+    sql: ${TABLE}.id ;;
+    primary_key: yes
   }
 
   dimension: state {
