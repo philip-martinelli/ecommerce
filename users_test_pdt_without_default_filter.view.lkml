@@ -3,7 +3,7 @@ view: users_test_pdt_without {
       sql:select id,state
             from users
             where {% condition state_filter %} state {% endcondition %};;
-      sql_trigger_value: SELECT 1;;
+      sql_trigger_value: SELECT CURDATE();;
       indexes: ["id"]
     }
 
