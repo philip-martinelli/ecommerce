@@ -36,4 +36,14 @@ view: orders {
     type: count
     drill_fields: [id, users.last_name, users.first_name, users.id, order_items.count]
   }
+
+  dimension: yesnotest{
+    type: yesno
+    sql: {% condition userid_plus_one %} user_id + 1 {% endcondition %};;
+  }
+
+  filter: userid_plus_one {
+    type: number
+  }
+
 }
