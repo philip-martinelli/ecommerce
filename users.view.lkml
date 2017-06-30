@@ -74,7 +74,7 @@ view: users {
   measure: perc_test {
     type: number
     sql: COUNT(distinct ${city})/COUNT(distinct ${id});;
-    value_format: "0.00%"
+    value_format: "0.0%"
   }
 
   # ----- Sets of fields for drilling ------
