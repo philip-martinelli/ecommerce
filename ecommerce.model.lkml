@@ -23,6 +23,7 @@ explore: inventory_items {
 }
 
 explore: order_items {
+  sql_always_where: ${users.state} <> 'California'  ;;
   join: inventory_items {
     type: left_outer
     sql_on: ${order_items.inventory_item_id} = ${inventory_items.id} ;;
@@ -67,7 +68,8 @@ explore: user_data {
     relationship: many_to_one
   }
 }
-
 explore: users {}
+
+explore: users_pdt {}
 
 explore: users_nn {}
