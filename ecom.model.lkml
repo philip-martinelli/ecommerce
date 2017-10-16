@@ -16,9 +16,6 @@ include: "users_nn.view"
 include: "orders_two.view"
 include: "max_date_dt.view"
 
-# Select the views that should be a part of this model,
-# and define the joins that connect them together.
-
 explore: order_items {
   join: orders {
     relationship: many_to_one
