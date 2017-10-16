@@ -1,5 +1,14 @@
-view: order_items {
-  sql_table_name: demo_db.order_items ;;
+view: oi {
+  derived_table: {
+    sql:
+    SELECT * FROM ${orders.SQL_TABLE_NAME}
+    WHERE ${orders.SQL_TABLE_NAME}.status = 'pending'
+
+
+    ;;
+  }
+
+
 
   dimension: id {
     primary_key: yes
@@ -16,7 +25,7 @@ view: order_items {
   dimension: order_id {
     type: number
     # hidden: yes
-    sql: ${TABLE}.order_id ;;
+    sql: (0 - ${TABLE}.order_id) ;;
   }
 
   dimension_group: returned {
@@ -48,4 +57,6 @@ view: order_items {
     type: count
     drill_fields: [id, inventory_items.id, orders.id]
   }
-}
+
+
+  }

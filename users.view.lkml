@@ -1,5 +1,6 @@
 view: users {
   sql_table_name: demo_db.users ;;
+  label: "users alias"
 
   dimension: id {
     primary_key: yes
@@ -15,10 +16,18 @@ view: users {
   dimension: city {
     type: string
     sql: ${TABLE}.city ;;
+    map_layer_name: state_layer
+
+  }
+
+  measure: max_date {
+    type: date
+    sql: max(${created_raw}) ;;
   }
 
   dimension: country {
     type: string
+    map_layer_name: countries
     sql: ${TABLE}.country ;;
   }
 
@@ -54,38 +63,67 @@ view: users {
   dimension: last_name {
     type: string
     sql: ${TABLE}.last_name ;;
+    html:
+    {% if value == 'm' %}
+    <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    {% elsif value == 'f' %}
+    <p style="color: black; background-color: lightgreen; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    {% endif %}
+    ;;
   }
 
   dimension: state {
     type: string
-    sql: ${TABLE}.state ;;
+    sql: ${TABLE}.state ;;  }
+
+  dimension: has_order {
+    type: yesno
+    sql:
+        EXISTS(
+                SELECT o.id from orders as o WHERE users.id = o.user_id
+              )
+    ;;
   }
 
   dimension: zip {
-    type: number
+    type: zipcode
     sql: ${TABLE}.zip ;;
+    map_layer_name: zip_layer
   }
 
-  measure: count {
+  measure: count_regular {
     type: count
-    drill_fields: [detail*]
+    drill_fields: [advanced*]
   }
 
-  measure: perc_test {
+  measure: count_users_with_orders {
+    type: count
+    filters: {
+      field: has_order
+      value: "yes"
+    }
+  }
+
+  measure: count_users_without_orders {
+    type: count
+    filters: {
+      field: has_order
+      value: "no"
+    }
+  }
+
+  measure: all_users {
     type: number
-    sql: COUNT(distinct ${city})/COUNT(distinct ${id});;
-    value_format: "0.0%"
+    sql: ${count_users_with_orders} + ${count_users_without_orders} ;;
+
   }
 
-  # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-      id,
-      last_name,
-      first_name,
-      events.count,
-      orders.count,
-      user_data.count
-    ]
-  }
+set: basic {
+  fields: [id,age,state]
+}
+set: advanced {
+  fields: [city,created_date,count_regular]
+}
+
+
 }

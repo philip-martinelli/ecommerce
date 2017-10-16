@@ -1,24 +1,17 @@
-view: orders {
-sql_table_name: demo_db.orders ;;
+view: orders_two {
+ sql_table_name: demo_db.orders ;;
 
-#   derived_table: {
-#     sql: SELECT * FROM  demo_db.orders
-# --       Group by 1
-#  --     HAVING {% condition num_filter %} order_count {% endcondition %}
-#
-#       ;;
-#
-#     }
+#    derived_table: {
+#     persist_for: "24 hours"
+#      sql: SELECT * FROM  demo_db.orders
+#           WHERE {% condition date_filter %} created_at {% endcondition %}
+#        ;;
+#      }
 
-    filter: check_one {
-      type: string
-      sql: ${status} = LEFT(REPLACE({% parameter check_one %},"-",""),6);;
-      #CONCAT(LEFT(REPLACE('2017-07-07',"-",""),6),"%")
-    }
+  filter: date_filter {
+    type: date
+  }
 
-#     filter: check_two {
-#       sql: ${id} = "{{ _filters['orders.check_one'] }}" ;;
-#     }
 
   dimension: id {
     primary_key: yes
@@ -36,8 +29,7 @@ sql_table_name: demo_db.orders ;;
       month,
       quarter,
       year,
-      day_of_month,
-      day_of_week
+      day_of_month
     ]
     sql: ${TABLE}.created_at ;;
   }
@@ -64,15 +56,14 @@ sql_table_name: demo_db.orders ;;
 
   dimension: user_id {
     type: number
-    label: "userszzzz_id"
     # hidden: yes
     sql: ${TABLE}.user_id ;;
   }
 
-#   dimension: inventory_item_id_test {
-#     type: string
-#     sql: ${order_items.inventory_item_id} ;;
-#   }
+  dimension: inventory_item_id_test {
+    type: string
+    sql: ${order_items.inventory_item_id} ;;
+  }
 
   measure: count {
     type: count
@@ -105,7 +96,6 @@ sql_table_name: demo_db.orders ;;
     }
   }
 
-
   dimension: yesnotest{
     type: yesno
     sql: {% condition userid_plus_one %} user_id + 1 {% endcondition %};;
@@ -114,13 +104,5 @@ sql_table_name: demo_db.orders ;;
   filter: userid_plus_one {
     type: number
   }
-
-
-#   dimension: in_last_12_month {
-#     type: yesno
-#     sql:  ${created_date} >= DATE_ADD(date_format(${max_date_dt.max_date_raw},'%Y-%m-01'), INTERVAL -12 MONTH)
-#     ;;
-#   }
-
 
 }
