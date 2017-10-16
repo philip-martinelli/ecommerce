@@ -72,7 +72,7 @@ view: orders_two {
 
   measure: count_test {
     type: count
-    sql: ${id} ;;
+  #  sql: ${id} ;;
     filters: {
       field: created_date
       value: "1 month ago"

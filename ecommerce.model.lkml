@@ -105,6 +105,7 @@ explore: users_extended {
 #   fields: [users.basic*,users.advanced*]
   join: orders_extended {
     type: inner
+    relationship: one_to_many
     sql_on: ${orders_extended.id} = ${orders.id};;
   }
 }
@@ -120,6 +121,7 @@ explore: users_nn {}
 explore: orders {
 #   from: orders
   join: order_items {
+    relationship: one_to_many
     sql_on: ${orders.id} = ${order_items.order_id} ;;
   }
 }
@@ -132,6 +134,7 @@ explore: orders_with_users {
   join: orders { # since users has been declared as the base view, we need to join in orders to make
     # the join with order_items work
     sql_on: ${orders.user_id}= ${users.id} ;;
+    relationship: one_to_many
     type: left_outer
   }
 }

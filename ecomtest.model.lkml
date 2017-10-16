@@ -30,6 +30,7 @@ include: "*.dashboard.lookml"  # include all dashboards in this project
 explore: orders {
   from: orders
   join: order_items {
+    relationship: one_to_many
     sql_on: ${orders.id} = ${order_items.order_id} ;;
   }
 }
@@ -43,6 +44,7 @@ explore: orders_with_users {
   join: orders { # since users has been declared as the base view, we need to join in orders to make
                 # the join with order_items work
     sql_on: ${orders.user_id}= ${orders_with_users.id} ;;
+    relationship: one_to_many
     type: left_outer
   }
 }

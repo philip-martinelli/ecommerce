@@ -16,7 +16,7 @@ view: users {
   dimension: city {
     type: string
     sql: ${TABLE}.city ;;
-    map_layer_name: state_layer
+    #map_layer_name: state_layer
 
   }
 
@@ -88,7 +88,7 @@ view: users {
   dimension: zip {
     type: zipcode
     sql: ${TABLE}.zip ;;
-    map_layer_name: zip_layer
+   # map_layer_name: zip_layer
   }
 
   measure: count_regular {
