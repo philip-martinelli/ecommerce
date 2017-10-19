@@ -8,6 +8,10 @@ view: users {
     sql: ${TABLE}.id ;;
   }
 
+  filter: test_f {
+    type: string
+  }
+
   dimension: age {
     type: number
     sql: ${TABLE}.age ;;
@@ -86,7 +90,7 @@ view: users {
   }
 
   dimension: zip {
-    type: zipcode
+    type: number
     sql: ${TABLE}.zip ;;
    # map_layer_name: zip_layer
   }
@@ -112,6 +116,16 @@ view: users {
     }
   }
 
+  dimension: state_test {
+    type: string
+    sql: ${TABLE}.state ;;
+  }
+
+  measure: test {
+    type: number
+    sql: ${count_users_with_orders}/${zip} ;;
+  }
+
   measure: all_users {
     type: number
     sql: ${count_users_with_orders} + ${count_users_without_orders} ;;
@@ -123,6 +137,11 @@ set: basic {
 }
 set: advanced {
   fields: [city,created_date,count_regular]
+}
+
+dimension: grouped_state {
+  type: string
+  sql: CASE WHEN {% condition test_f %} ${state} {% endcondition %} THEN "CA" else "OTHER" end;;
 }
 
 
