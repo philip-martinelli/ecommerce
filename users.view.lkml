@@ -89,6 +89,11 @@ view: users {
     ;;
   }
 
+
+  dimension: t {
+    type: string
+    sql: ${TABLE}.state ;;
+  }
   dimension: zip {
     type: number
     sql: ${TABLE}.zip ;;
