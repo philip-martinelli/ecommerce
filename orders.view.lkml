@@ -76,7 +76,7 @@ sql_table_name: demo_db.orders ;;
 
   measure: count {
     type: count
-    drill_fields: [id, users.last_name, users.first_name, users.id, order_items.count]
+    drill_fields: [id,order_items.count]
   }
 
   measure: count_test {

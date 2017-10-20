@@ -78,7 +78,8 @@ view: users {
 
   dimension: state {
     type: string
-    sql: ${TABLE}.state ;;  }
+    sql: ${TABLE}.state ;;
+    }
 
   dimension: has_order {
     type: yesno
@@ -134,7 +135,10 @@ view: users {
   measure: all_users {
     type: number
     sql: ${count_users_with_orders} + ${count_users_without_orders} ;;
-
+    link: {
+      label: "pivot test-explore"
+      url: "https://self-signed.looker.com:9999/explore/ecommerce/users?fields=users.state,users.count_users_with_orders&f[users.gender]={{ users.gender._filterable_value}}"
+    }
   }
 
 set: basic {
@@ -144,7 +148,7 @@ set: advanced {
   fields: [city,created_date,count_regular]
 }
 
-dimension: grouped_state {
+dimension: grouped_state_rename {
   type: string
   sql: CASE WHEN {% condition test_f %} ${state} {% endcondition %} THEN "CA" else "OTHER" end;;
 }
