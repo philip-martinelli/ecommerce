@@ -21,6 +21,8 @@ include: "*.view"
 # include all the dashboards
 include: "*.dashboard"
 
+explore: users_test_pdt_with {}
+
 explore: events {
   join: users {
    # type: left_outer
