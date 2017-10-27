@@ -141,6 +141,10 @@ view: users {
     }
   }
 
+  measure: count {
+    type: count
+  }
+
 set: basic {
   fields: [id,age,state]
 }

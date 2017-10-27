@@ -20,6 +20,10 @@ sql_table_name: demo_db.orders ;;
 #       sql: ${id} = "{{ _filters['orders.check_one'] }}" ;;
 #     }
 
+  parameter: test {
+    type: unquoted
+  }
+
   dimension: id {
     primary_key: yes
     type: number
@@ -84,6 +88,10 @@ sql_table_name: demo_db.orders ;;
   measure: count {
     type: count
     drill_fields: [id,order_items.count]
+    link: {
+      label: "test"
+      url: "/explore/ecommerce/users?fields=users.state,users.count,&f[users.created_date]={{ _filters['orders.created_date'] | url_encode }}"
+      }
   }
 
   measure: count_test {
