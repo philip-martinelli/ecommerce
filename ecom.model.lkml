@@ -17,6 +17,7 @@ include: "orders_two.view"
 include: "max_date_dt.view"
 
 explore: order_items {
+  sql_always_where: ${users.state} <> "California" ;;
   join: orders {
     relationship: many_to_one
     sql_on: ${orders.id} = ${order_items.order_id} ;;
@@ -24,6 +25,7 @@ explore: order_items {
 
 #
   join: users {
+    fields: [id]
     relationship: many_to_one
     sql_on: ${users.id} = ${orders.user_id} ;;
   }

@@ -43,8 +43,15 @@ sql_table_name: demo_db.orders ;;
   }
 
   dimension: created_d {
-    type: date
-    sql: ${TABLE}.created_at ;;
+    type: string
+    sql: CAST(${TABLE}.created_at AS CHAR) ;;
+  }
+
+  dimension_group: test_created_d {
+    type: time
+    timeframes: [date,year,month]
+    datatype: date
+    sql: ${created_d} ;;
   }
 
   dimension: order_count {
@@ -97,11 +104,15 @@ sql_table_name: demo_db.orders ;;
     sql: {% condition last_one_day_filter %} ${created_raw} {% endcondition %} ;;
   }
 
-  measure: count_last_one_day {
+  measure: count_last_three_months {
     type: count
     filters: {
-      field: last_one_day
-      value: "yes"
+      field: status
+      value: "complete"
+}
+    filters: {
+      field: created_date
+      value: "3 months ago"
     }
   }
 
@@ -114,7 +125,6 @@ sql_table_name: demo_db.orders ;;
   filter: userid_plus_one {
     type: number
   }
-
 
 #   dimension: in_last_12_month {
 #     type: yesno
