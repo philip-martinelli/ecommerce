@@ -8,14 +8,18 @@ view: users {
     sql: ${TABLE}.id ;;
   }
 
-  filter: test_f {
+  dimension: exists_corr_sq {
     type: string
+    sql: CASE WHEN EXISTS (SELECT o.user_id FROM orders o WHERE o.user_id = users.id) THEN "Has Order" ELSE "Doesn't"  END ;;
   }
+
 
   dimension: age {
     type: number
     sql: ${TABLE}.age ;;
   }
+
+
 
   dimension: city {
     type: string
@@ -145,6 +149,11 @@ view: users {
     type: count
   }
 
+#   dimension: yesno_ref_measure {
+#     type: yesno
+#     sql: ${count} > 1 ;;
+#   }
+
 set: basic {
   fields: [id,age,state]
 }
@@ -152,10 +161,6 @@ set: advanced {
   fields: [city,created_date,count_regular]
 }
 
-dimension: grouped_state_rename {
-  type: string
-  sql: CASE WHEN {% condition test_f %} ${state} {% endcondition %} THEN "CA" else "OTHER" end;;
-}
 
 
 }

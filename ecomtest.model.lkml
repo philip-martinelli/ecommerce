@@ -48,3 +48,11 @@ explore: orders_with_users {
     type: left_outer
   }
 }
+
+explore: users {
+  sql_always_where:{% if users.state._in_query %}
+                    ${gender} = "{{ _user_attributes['gender'] }}"
+                  {% else %}
+                  1=1
+                  {% endif %};;
+}

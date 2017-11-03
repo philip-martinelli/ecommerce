@@ -24,6 +24,16 @@ sql_table_name: demo_db.orders ;;
     type: unquoted
   }
 
+  measure: date_min {
+    type: date
+    sql: min(${TABLE}.created_at) ;;
+  }
+
+  dimension: yesno_min_date {
+    type: yesno
+    sql: ${created_date} = (SELECT MIN(o.created_at) FROM orders o where o.user_id  = orders.user_id ) ;;
+  }
+
   dimension: id {
     primary_key: yes
     type: number
