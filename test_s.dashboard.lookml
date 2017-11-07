@@ -1,4 +1,4 @@
-- dashboard: test_s
+- dashboard: test_s'
   title: Test S's test
   layout: tile
   tile_size: 100
