@@ -28,6 +28,17 @@ include: "*.dashboard.lookml"  # include all dashboards in this project
 
 
 explore: orders {
+  always_filter: {
+    filters: {
+      field: created_date
+      value: "before yesterday"
+    }
+#     filters: {
+#       field: created_month
+#       value: "after 7 days ago"
+#     }
+  }
+  sql_always_where: orders.created_at  >= (DATE_ADD(CURDATE(),INTERVAL -7 day)) ;;
   from: orders
   join: order_items {
     relationship: one_to_many
@@ -50,9 +61,9 @@ explore: orders_with_users {
 }
 
 explore: users {
-  sql_always_where:{% if users.state._in_query %}
-                    ${gender} = "{{ _user_attributes['gender'] }}"
-                  {% else %}
-                  1=1
-                  {% endif %};;
+  # sql_always_where:{% if users.last_name._in_query %}
+  #                   ${id} = (SELECT id from users WHERE {% parameter name_filter %}
+  #                 {% else %}
+  #                 1=1
+  #                 {% endif %};;
 }

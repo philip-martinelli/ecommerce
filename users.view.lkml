@@ -6,6 +6,7 @@ view: users {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+    can_filter: no
   }
 
   dimension: exists_corr_sq {
@@ -17,6 +18,7 @@ view: users {
   dimension: age {
     type: number
     sql: ${TABLE}.age ;;
+    can_filter: no
   }
 
 
@@ -107,7 +109,7 @@ view: users {
 
   measure: count_regular {
     type: count
-    drill_fields: [advanced*]
+    drill_fields: [basic*]
   }
 
   measure: count_users_with_orders {
