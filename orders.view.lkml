@@ -40,6 +40,19 @@ sql_table_name: demo_db.orders ;;
     sql: ${TABLE}.id ;;
   }
 
+
+  dimension: latest_id {
+    type: number
+    sql:
+        (SELECT
+          o.id
+        FROM orders o
+          WHERE o.user_id = orders.user_id
+              AND o.created_at = (SELECT max(oo.created_at) FROM orders oo WHERE oo.user_id = orders.user_id))
+    ;;
+  }
+
+
   dimension_group: created {
     type: time
     timeframes: [
