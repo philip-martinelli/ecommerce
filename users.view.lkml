@@ -21,6 +21,16 @@ view: users {
     can_filter: no
   }
 
+  measure: count_format {
+    type: string
+    sql: ${count} ;;
+    html: {% if value > 16000 %}
+           <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">Yes</p>
+           {% else %}
+            <p style="color: black; background-color: lightgreen; font-size:100%; text-align:center">No</p>
+          {% endif %} ;;
+  }
+
 
 
   dimension: city {

@@ -1,15 +1,6 @@
 view: orders {
 sql_table_name: demo_db.orders ;;
 
-#   derived_table: {
-#     sql: SELECT * FROM  demo_db.orders
-# --       Group by 1
-#  --     HAVING {% condition num_filter %} order_count {% endcondition %}
-#
-#       ;;
-#
-#     }
-
     filter: check_one {
       type: string
       sql: ${status} = LEFT(REPLACE({% parameter check_one %},"-",""),6);;
@@ -157,11 +148,30 @@ sql_table_name: demo_db.orders ;;
     type: number
   }
 
+  dimension: school_logo {
+    # School Logo retreived from S3
+    label: "School Logo"
+    sql: ${} ;;
+    html:<img src="https://s3.amazonaws.com/flywire.analytics.raw.data/portal_logo/{{ value }}.png" width="150px" height="100%" /> ;;
+  }
+
+
+
 #   dimension: in_last_12_month {
 #     type: yesno
 #     sql:  ${created_date} >= DATE_ADD(date_format(${max_date_dt.max_date_raw},'%Y-%m-01'), INTERVAL -12 MONTH)
 #     ;;
 #   }
 
+  dimension: month_part {
+    type: number
+    sql: SELECT
+date(created_at)
+,(WEEK(date(created_at)) - WEEK(str_to_date(concat(extract(year from date(created_at)),"-",extract(month from date(created_at)),"-","01"),"%Y-%m-%d")) + 1)
+FROM users
+group by 1,2
+order by 1 desc
+Limit 100 ;;
+  }
 
 }
