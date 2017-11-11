@@ -1,16 +1,6 @@
 view: orders {
 sql_table_name: demo_db.orders ;;
 
-    filter: check_one {
-      type: string
-      sql: ${status} = LEFT(REPLACE({% parameter check_one %},"-",""),6);;
-      #CONCAT(LEFT(REPLACE('2017-07-07',"-",""),6),"%")
-    }
-
-#     filter: check_two {
-#       sql: ${id} = "{{ _filters['orders.check_one'] }}" ;;
-#     }
-
   parameter: test {
     type: unquoted
   }
@@ -94,11 +84,6 @@ sql_table_name: demo_db.orders ;;
     sql: ${TABLE}.user_id ;;
   }
 
-#   dimension: inventory_item_id_test {
-#     type: string
-#     sql: ${order_items.inventory_item_id} ;;
-#   }
-
   measure: count {
     type: count
     drill_fields: [id,order_items.count]
@@ -148,14 +133,21 @@ sql_table_name: demo_db.orders ;;
     type: number
   }
 
-  dimension: school_logo {
-    # School Logo retreived from S3
-    label: "School Logo"
-    sql: ${} ;;
-    html:<img src="https://s3.amazonaws.com/flywire.analytics.raw.data/portal_logo/{{ value }}.png" width="150px" height="100%" /> ;;
+  # dimension: school_logo {
+  #   # School Logo retreived from S3
+  #   label: "School Logo"
+  #   sql: ${} ;;
+  #   html:<img src="https://s3.amazonaws.com/flywire.analytics.raw.data/portal_logo/{{ value }}.png" width="150px" height="100%" /> ;;
+  # }
+
+  dimension: california_pic {
+    sql: ('/Desktop/oregon.png') ;;
   }
 
-
+  dimension: california_pic_image {
+    sql: ${california_pic};;
+    html: <img src="{{ value }}" width="100" height="100"/> ;;
+  }
 
 #   dimension: in_last_12_month {
 #     type: yesno
