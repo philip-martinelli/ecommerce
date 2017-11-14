@@ -133,19 +133,20 @@ sql_table_name: demo_db.orders ;;
     type: number
   }
 
-  # dimension: school_logo {
-  #   # School Logo retreived from S3
-  #   label: "School Logo"
-  #   sql: ${} ;;
-  #   html:<img src="https://s3.amazonaws.com/flywire.analytics.raw.data/portal_logo/{{ value }}.png" width="150px" height="100%" /> ;;
-  # }
 
-  dimension: california_pic {
-    sql: ('/Desktop/oregon.png') ;;
+  dimension: school_logo {
+    # School Logo retreived from S3
+    label: "School Logo"
+    sql: ${pic} ;;
+    html:<img src="https://image.freepik.com/free-icon/png-file-format-symbol_318-45313.jpg" width="150px" height="100%" /> ;;
   }
 
-  dimension: california_pic_image {
-    sql: ${california_pic};;
+  dimension: pic {
+    sql: ('https://image.freepik.com/free-icon/png-file-format-symbol_318-45313.jpg') ;;
+  }
+
+  dimension: pic_image {
+    sql: ${pic};;
     html: <img src="{{ value }}" width="100" height="100"/> ;;
   }
 

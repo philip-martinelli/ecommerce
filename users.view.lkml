@@ -31,6 +31,13 @@ view: users {
           {% endif %} ;;
   }
 
+  dimension: state_pic {
+    # School Logo retreived from S3
+    label: "state pic"
+    sql: ${state} ;;
+    html:<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_{{ value }}.svg/250px-Flag_of_{{ value }}.svg.png" width="150px" height="100%" /> ;;
+  }
+
 
 
   dimension: city {

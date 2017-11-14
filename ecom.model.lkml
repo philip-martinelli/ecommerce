@@ -15,6 +15,7 @@ include: "users_pdt.view"
 include: "users_nn.view"
 include: "orders_two.view"
 include: "max_date_dt.view"
+include: "orders_ndt.view"
 
 explore: order_items {
   sql_always_where: ${users.state} <> "California" ;;
@@ -35,13 +36,6 @@ explore: order_items {
 
 
 explore: orders {
-  always_filter: {
-    filters: {
-      field: status_two
-      value: "{{ _filters['orders.check_one'] }}"
-    }
-}
-##
 }
 
   explore: orders_two {
@@ -84,4 +78,4 @@ explore: orders {
     file: "Cities2015.json"
   }
 
-#explore: oi {}
+explore:ndt_test{}
