@@ -15,6 +15,7 @@ include: "users_pdt.view"
 include: "users_nn.view"
 include: "orders_two.view"
 include: "max_date_dt.view"
+include: "users_facts.view"
 
 
 ##

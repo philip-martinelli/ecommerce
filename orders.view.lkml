@@ -50,6 +50,21 @@ sql_table_name: demo_db.orders ;;
     sql: ${TABLE}.created_at ;;
   }
 
+  dimension: week_day {
+    type: date_day_of_week
+    sql: ${created_day_of_week} ;;
+    html:
+    {% if value == 'Saturday' %}
+    <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    {% elsif value == 'Sunday' %}
+    <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    {% else %}
+    <p style="color: black; background-color: orange; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    {% endif %}
+    ;;
+  }
+
+
   dimension: created_d {
     type: string
     sql: CAST(${TABLE}.created_at AS CHAR) ;;
@@ -120,6 +135,10 @@ sql_table_name: demo_db.orders ;;
     filters: {
       field: created_date
       value: "3 months ago"
+    }
+    filters: {
+      field: user_id
+      value: "100"
     }
   }
 

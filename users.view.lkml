@@ -2,6 +2,10 @@ view: users {
   sql_table_name: demo_db.users ;;
   label: "users alias"
 
+  parameter: state_param {
+    type: string
+  }
+
   dimension: id {
     primary_key: yes
     type: number
@@ -13,6 +17,14 @@ view: users {
     type: string
     sql: CASE WHEN EXISTS (SELECT o.user_id FROM orders o WHERE o.user_id = users.id) THEN "Has Order" ELSE "Doesn't"  END ;;
   }
+
+  dimension: is_ca {
+    type: yesno
+    #sql: ${state} = {% parameter users.state_param %} ;;
+    sql: ${state} = '{{ _user_attributes['state'] }}' ;;
+  }
+
+#sql: ${state} = "{{ _user_attributes['state'] }}" ;;
 
 
   dimension: age {
@@ -102,6 +114,7 @@ view: users {
   dimension: state {
     type: string
     sql: ${TABLE}.state ;;
+    suggestions: ["California","New York"]
     }
 
   dimension: has_order {
@@ -121,7 +134,7 @@ view: users {
   dimension: zip {
     type: number
     sql: ${TABLE}.zip ;;
-   # map_layer_name: zip_layer
+    map_layer_name: zip_layer
   }
 
   measure: count_regular {
@@ -166,6 +179,19 @@ view: users {
 
   measure: count {
     type: count
+  }
+  measure: yesno_count {
+    type: yesno
+    sql: ${count} > 0 ;;
+  }
+
+  measure: filered_measure_count {
+    type: average
+    sql: ${id} ;;
+    # filters: {
+    #   field: yesno_count
+    #   value: "yes"
+    # }
   }
 
 #   dimension: yesno_ref_measure {

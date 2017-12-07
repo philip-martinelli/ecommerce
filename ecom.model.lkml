@@ -16,6 +16,7 @@ include: "users_nn.view"
 include: "orders_two.view"
 include: "max_date_dt.view"
 include: "orders_ndt.view"
+include: "param_dt.view"
 
 explore: order_items {
   sql_always_where: ${users.state} <> "California" ;;
@@ -54,14 +55,31 @@ explore: orders {
   }
 
 
-  explore: users {
-    access_filter: {
-      user_attribute: state
-      field: state
+  explore: users_test {
+    from: users
+    join: users_a {
+      from: users
+      type: inner
+      relationship: one_to_one
+      sql_on: ${users_a.id} = ${users_test.id} AND ${users_a.age} = 25 ;;
+      required_joins: [users_b]
     }
+    join: users_b {
+      from: users
+      type: inner
+      relationship: one_to_one
+      sql_on: ${users_b.id} = ${users_test.id} AND ${users_b.city} = "San Francisco" ;;
+    }
+  }
 
+
+
+
+  explore: users {
+    fields: [ALL_FIELDS*]
     join: orders {
       relationship: one_to_many
+      fields: [orders.created_date,orders.user_id]
       type: left_outer
       sql_on: ${users.id} = ${orders.user_id} ;;
     }
@@ -79,3 +97,4 @@ explore: orders {
   }
 
 explore:ndt_test{}
+explore: param_dt {}

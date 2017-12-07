@@ -10,6 +10,7 @@
     dimension_group: created_date {
       type: time
       timeframes: [date,time]
+      #datatype: date
     }
 
 
