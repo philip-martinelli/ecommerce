@@ -2,8 +2,8 @@ view: users {
   sql_table_name: demo_db.users ;;
   label: "users alias"
 
-  parameter: state_param {
-    type: string
+  parameter: param_example {
+    type: unquoted
   }
 
   dimension: id {
@@ -115,7 +115,17 @@ view: users {
     type: string
     sql: ${TABLE}.state ;;
     suggestions: ["California","New York"]
+    hidden: no
+    order_by_field: state_order
     }
+
+  dimension: state_order {
+    type: number
+    sql: CASE WHEN ${state} = "California" then 3
+        WHEN ${state} = "New York" then 1
+        when ${state} = "Alabama" then 2
+        end;;
+  }
 
   dimension: has_order {
     type: yesno
@@ -124,6 +134,23 @@ view: users {
                 SELECT o.id from orders as o WHERE users.id = o.user_id
               )
     ;;
+  }
+
+  dimension: case_dim {
+    case: {
+      when: {
+        sql:  1=2 ;;
+        label: "Male and Female"
+      }
+      when: {
+        sql: ${gender}="m" ;;
+        label: "Male"
+      }
+      when: {
+        sql: ${gender} = "f" ;;
+        label: "Female"
+      }
+    }
   }
 
 

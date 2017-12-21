@@ -1,5 +1,9 @@
 view: products {
-  sql_table_name: demo_db.products ;;
+  sql_table_name: {% parameter schema_test %}.products ;;
+
+  parameter: schema_test {
+    type: unquoted
+  }
 
   dimension: id {
     primary_key: yes
@@ -10,6 +14,11 @@ view: products {
   dimension: brand {
     type: string
     sql: ${TABLE}.brand ;;
+  }
+
+  measure: item_count {
+    type: count_distinct
+    sql: ${item_name} ;;
   }
 
   dimension: category {

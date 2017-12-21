@@ -43,7 +43,7 @@ explore: order_items {
   always_filter: {
     filters: {
       field: users.state
-      value: "_California"
+      value: "California"
     }
   }
   #sql_always_where: ${users.state} <> 'California'  ;;
@@ -92,6 +92,7 @@ explore: user_data {
   }
 }
 explore: users {
+  sql_always_where: ${state} is not NULL ;;
   view_name: users
   from: users
 # fields: [users.basic*]
@@ -139,4 +140,8 @@ explore: orders_with_users {
     relationship: one_to_many
     type: left_outer
   }
+}
+
+explore: products_pm {
+  from: products
 }

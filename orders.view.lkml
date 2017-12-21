@@ -5,6 +5,16 @@ sql_table_name: demo_db.orders ;;
     type: unquoted
   }
 
+  measure: sum_test {
+    type: sum
+    sql: ${id}/{% parameter test %} ;;
+  }
+
+  filter: status_filter_test{
+    type: string
+    sql: ${status} = "complete" ;;
+  }
+
   measure: date_min {
     type: date
     sql: min(${TABLE}.created_at) ;;
@@ -101,11 +111,11 @@ sql_table_name: demo_db.orders ;;
 
   measure: count {
     type: count
-    drill_fields: [id,order_items.count]
-    link: {
-      label: "test"
-      url: "/explore/ecommerce/users?fields=users.state,users.count,&f[users.created_date]={{ _filters['orders.created_date'] | url_encode }}"
-      }
+    drill_fields: [users.state]
+#     link: {
+#       label: "test"
+#       url: "/explore/ecommerce/users?fields=users.state,users.count,&f[users.created_date]={{ _filters['orders.created_date'] | url_encode }}"
+#       }
   }
 
   measure: count_test {
