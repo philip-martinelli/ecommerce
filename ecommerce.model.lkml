@@ -80,7 +80,13 @@ explore: order_items {
 #   }
 # }
 
-explore: products {}
+explore: products {
+  join: inventory_items {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${inventory_items.product_id}=${products.id} ;;
+  }
+}
 
 explore: schema_migrations {}
 

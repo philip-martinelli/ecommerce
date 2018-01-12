@@ -4,6 +4,12 @@ view: users {
 
   parameter: param_example {
     type: unquoted
+    suggest_dimension: state
+  }
+
+  parameter: param_exampe {
+    type: unquoted
+
   }
 
   dimension: id {
@@ -56,7 +62,13 @@ view: users {
     type: string
     sql: ${TABLE}.city ;;
     #map_layer_name: state_layer
+  }
 
+
+  dimension: city_name {
+    type: string
+    sql: ${TABLE}.city ;;
+    #map_layer_name: state_layer
   }
 
   measure: max_date {
@@ -190,9 +202,10 @@ view: users {
     sql: ${TABLE}.state ;;
   }
 
-  measure: test {
-    type: number
-    sql: ${count_users_with_orders}/${zip} ;;
+  measure: percent_of_t {
+    type: percent_of_total
+    sql: ${count} ;;
+    drill_fields: [users.city,percent_of_t]
   }
 
   measure: all_users {
@@ -220,11 +233,17 @@ view: users {
     #   value: "yes"
     # }
   }
+  measure: meas_ref_dim {
+    type: number
+    sql: (${filered_measure_count}/${id}) ;;
+  }
 
 #   dimension: yesno_ref_measure {
 #     type: yesno
 #     sql: ${count} > 1 ;;
 #   }
+
+
 
 set: basic {
   fields: [id,age,state]

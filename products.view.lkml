@@ -1,9 +1,65 @@
 view: products {
-  sql_table_name: {% parameter schema_test %}.products ;;
+  #sql_table_name: {% parameter schema_test %}.products ;;
 
   parameter: schema_test {
-    type: unquoted
+    type: number
+
   }
+
+  parameter: parameter_test {
+    type: number
+
+  }
+
+  filter: filter_test {
+    type: number
+    #default_value: "one"
+  }
+
+  measure: count_test {
+    type: count
+    html:
+        {% assign fil = _filters['products.filter_test'] | times: 1 %}
+        {% if fil > value %}
+        <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
+        {% elsif fil <= value  %}
+        <p style="color: black; background-color: pink; font-size:100%; text-align:center">{{ rendered_value }}</p>
+        {% else %}
+        <p style  "color: black; background-color: lightgreen; font-size:100%; text-align:center">{{ rendered_value }}</p>
+        {% endif %}
+    ;;
+
+    # html:
+    # {% if _filters['products.schema_test'] == "test" %}
+    # <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    # {% else %}
+    # <p style="color: black; background-color: red; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    # {% endif %}
+    # ;;
+
+    # html: {% if value > {{ daily_bucketed_totals.abg_high_total_hits_excluding_quotelist_high_threshold._filterable_value }}
+    # <p style="color: #585858; background-color: lightgreen; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    # {% elsif value <= {{ daily_bucketed_totals.abg_high_total_hits_excluding_quotelist_high_threshold._filterable_value }} and value >= {{ daily_bucketed_totals.abg_high_total_hits_excluding_quotelist_medium_threshold._filterable_value }}
+    #   <p style="color:#585858; background-color: #F7D358; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    #   {% else %}
+    #   <p style="color:#585858; background-color: #F78181; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    #   {% endif %}
+    #   ;;
+  }
+
+  dimension: test  {
+    type: string
+    sql: "{% parameter schema_test %}" ;;
+  }
+
+  dimension: test_two  {
+    type: string
+    sql: " " ;;
+    html:
+        {% if _filters['products.schema_test']  %}
+    _filters['products.schema_test'];;
+  }
+
 
   dimension: id {
     primary_key: yes
@@ -24,6 +80,15 @@ view: products {
   dimension: category {
     type: string
     sql: ${TABLE}.category ;;
+  # html:
+  #   {% if value == 'Accessories' %}
+  #   <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
+  #   {% elsif value == 'Jeans' %}
+  #   <p style="color: black; background-color: lightgreen; font-size:100%; text-align:center">{{ rendered_value }}</p>
+  #   {% else %}
+  #   <p style="color: black; background-color: orange; font-size:100%; text-align:center">{{ rendered_value }}</p>
+  #   {% endif %}
+  #   ;;
   }
 
   dimension: department {
@@ -51,8 +116,23 @@ view: products {
     sql: ${TABLE}.sku ;;
   }
 
+  measure: foo {
+    type: sum
+    sql:  ${TABLE}.foo ;;
+  }
+
   measure: count {
     type: count
+    html:
+    {% if value > 1000 %}
+    <a href="{{ link }}" style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ value }}</a>
+
+    {% elsif value > 500 %}
+        <a href="{{ link }}" style="color: black; background-color: lightgreen; font-size:100%; text-align:center">{{ value }}</a>
+    {% else %}
+        <a href="{{ link }}" style="color: black; background-color: orange; font-size:100%; text-align:center">{{ value }}</a>
+    {% endif %}
+    ;;
     drill_fields: [id, item_name, inventory_items.count]
   }
 }
