@@ -196,4 +196,9 @@ order by 1 desc
 Limit 100 ;;
   }
 
+  measure: list_type {
+    type: list
+    list_field: created_week
+  }
+
 }

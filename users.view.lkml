@@ -2,15 +2,38 @@ view: users {
   sql_table_name: demo_db.users ;;
   label: "users alias"
 
+#   filter: test_filter {
+#     type: unquoted
+#   }
+
+  dimension: test_dim {
+    type: number
+    sql: ${TABLE}.id/1/2/(case when "{% parameter param_exampe %}" = "State" then 3 else 4 end);;
+  }
+
+  dimension: test_dim_test {
+    type: number
+    sql: ${TABLE}.id/1/2/3 ;;
+  }
+
+  dimension: dynamic_column {
+    type: string
+    sql: ${TABLE}.{% parameter param_exampe %} ;;
+  }
+
+  parameter: param_exampe {
+    type: unquoted
+    allowed_value: {
+      label: "state"
+      value: "State"
+    }
+  }
+
   parameter: param_example {
     type: unquoted
     suggest_dimension: state
   }
 
-  parameter: param_exampe {
-    type: unquoted
-
-  }
 
   dimension: id {
     primary_key: yes
@@ -43,9 +66,9 @@ view: users {
     type: string
     sql: ${count} ;;
     html: {% if value > 16000 %}
-           <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">Yes</p>
+           <p style="color: black; background-color: lightblue; font-size:50%; text-align:center">{{value}}</p>
            {% else %}
-            <p style="color: black; background-color: lightgreen; font-size:100%; text-align:center">No</p>
+            <p style="color: black; background-color: lightgreen; font-size:50%; text-align:center">{{value}}</p>
           {% endif %} ;;
   }
 
@@ -83,6 +106,7 @@ view: users {
   }
 
   dimension_group: created {
+    label: "Event "
     type: time
     timeframes: [
       raw,
@@ -210,6 +234,7 @@ view: users {
 
   measure: all_users {
     type: number
+    description: "test description"
     sql: ${count_users_with_orders} + ${count_users_without_orders} ;;
     link: {
       label: "pivot test-explore"

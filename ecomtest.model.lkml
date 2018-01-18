@@ -81,4 +81,8 @@ explore: users {
   #                 {% else %}
   #                 1=1
   #                 {% endif %};;
+  join: orders {
+    type: left_outer
+    sql_on: ${users.id}=${orders.user_id} ;;
+  }
 }
