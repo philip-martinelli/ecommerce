@@ -120,7 +120,7 @@ explore: users_extended {
 }
 
 
-explore: users_pdt {}
+explore: users_pdt_scratch_schem_test {}
 
 explore: users_nn {}
 
@@ -146,8 +146,4 @@ explore: orders_with_users {
     relationship: one_to_many
     type: left_outer
   }
-}
-
-explore: products_pm {
-  from: products
 }

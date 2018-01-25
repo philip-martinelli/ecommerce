@@ -31,7 +31,35 @@ view: users {
 
   parameter: param_example {
     type: unquoted
-    suggest_dimension: state
+    allowed_value: {
+      label: "California"
+      value: "California"
+    }
+    allowed_value: {
+      label: "New York"
+      value: "New_York"
+    }
+    allowed_value: {
+      label: "New Mexico"
+      value: "New_Mexico"
+    }
+    allowed_value: {
+      label: "All States"
+      value: "All_states"
+    }
+  }
+
+  dimension: Boolean_field_for_state {
+    type: yesno
+    sql: CASE WHEN '{% parameter param_example %}' = 'California' THEN ${TABLE}.state = 'California'
+              WHEN '{% parameter param_example %}' = 'New_York' THEN ${TABLE}.state = 'New York'
+              WHEN '{% parameter param_example %}' = 'New_Mexico' THEN ${TABLE}.state = 'New Mexico'
+              ELSE 1=1 end;;
+  }
+
+
+  filter: user_date_filter {
+    type: date
   }
 
 
@@ -53,6 +81,12 @@ view: users {
     sql: ${state} = '{{ _user_attributes['state'] }}' ;;
   }
 
+  measure: max_date_w_filters_one {
+    type: date
+    sql: max(CASE WHEN ${state} = 'California' then ${created_date} else null end) ;;
+  }
+
+
 #sql: ${state} = "{{ _user_attributes['state'] }}" ;;
 
 
@@ -60,6 +94,8 @@ view: users {
     type: number
     sql: ${TABLE}.age ;;
     can_filter: no
+    html: <a href="https://www.google.com/{{value}}" target="_blank" style="color:blue; font-weight: bold; ">{{ rendered_value }}</a> ;;
+
   }
 
   measure: count_format {
@@ -92,6 +128,7 @@ view: users {
     type: string
     sql: ${TABLE}.city ;;
     #map_layer_name: state_layer
+    html: <a href="https://www.google.com/{{value}}" target="_blank" style="color:blue; font-weight: bold; ">{{ rendered_value }}</a> ;;
   }
 
   measure: max_date {
@@ -115,7 +152,9 @@ view: users {
       week,
       month,
       quarter,
-      year
+      year,
+      month_num,
+      month_name
     ]
     sql: ${TABLE}.created_at ;;
   }
@@ -151,8 +190,8 @@ view: users {
     type: string
     sql: ${TABLE}.state ;;
     suggestions: ["California","New York"]
-    hidden: no
-    order_by_field: state_order
+    # hidden: no
+    # order_by_field: state_order
     }
 
   dimension: state_order {
@@ -163,11 +202,24 @@ view: users {
         end;;
   }
 
+  parameter: limit_param {
+    type: unquoted
+  }
+
+  dimension: in_state_set {
+    type: yesno
+    sql:
+       ${state} IN (
+                SELECT state from ${TABLE} order by state limit {% parameter limit_param %}
+              )
+    ;;
+  }
+
   dimension: has_order {
     type: yesno
     sql:
         EXISTS(
-                SELECT o.id from orders as o WHERE users.id = o.user_id
+                SELECT ${TABLE}.id from ${TABLE} as o WHERE users.id = o.user_id
               )
     ;;
   }
@@ -189,11 +241,6 @@ view: users {
     }
   }
 
-
-  dimension: t {
-    type: string
-    sql: ${TABLE}.state ;;
-  }
   dimension: zip {
     type: number
     sql: ${TABLE}.zip ;;

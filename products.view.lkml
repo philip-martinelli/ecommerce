@@ -70,6 +70,8 @@ view: products {
   dimension: brand {
     type: string
     sql: ${TABLE}.brand ;;
+    html: <a href={{products.drill_link._value}}>{{ value }}</a> ;;
+
   }
 
   measure: item_count {
@@ -90,6 +92,18 @@ view: products {
   #   {% endif %}
   #   ;;
   }
+
+  dimension: drill_link {
+    type: string
+    sql:
+    {% if products.department._is_filtered %}
+    "https://self-signed.looker.com:9999/explore/ecommerce/products?fields=products.brand&f[products.department]=&limit=500&vis=%7B%7D&filter_config=%7B%22products.department%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%7D%5D%7D&origin=share-expanded"
+    {% else %}
+    "https://self-signed.looker.com:9999/explore/ecommerce/products?qid=aIjL6GqOWU2YDDi0AmkZ3u&toggle=fil"
+    {% endif %}
+    ;;
+  }
+
 
   dimension: department {
     type: string

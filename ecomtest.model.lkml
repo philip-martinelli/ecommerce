@@ -15,11 +15,14 @@ include: "users_pdt.view"
 include: "users_nn.view"
 include: "orders_two.view"
 include: "max_date_dt.view"
+include: "if_then_dynamic_measure_users.view"
+include: "users_pdt.view"
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
 #
 # explore: order_items {
-
+explore: if_then_dynamic_measure_users {}
+explore: users_pdt_scratch_schem_test {}
 
 ######
 #   join: orders {
@@ -76,6 +79,7 @@ explore: orders_with_users {
 }
 
 explore: users {
+ # sql_always_where: {% condition users.user_date_filter %} ${created_date} {% endcondition %};;
   # sql_always_where:{% if users.last_name._in_query %}
   #                   ${id} = (SELECT id from users WHERE {% parameter name_filter %}
   #                 {% else %}
@@ -83,6 +87,6 @@ explore: users {
   #                 {% endif %};;
   join: orders {
     type: left_outer
-    sql_on: ${users.id}=${orders.user_id} ;;
+    sql_on: ${users.id}=${orders.user_id} AND {% condition users.created_date %} ${orders.created_date} {% endcondition %};;
   }
 }

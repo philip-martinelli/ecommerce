@@ -1,8 +1,9 @@
-view: users_pdt {
+view: users_pdt_scratch_schem_test {
 
   derived_table: {
     sql:
     SELECT state, gender FROM demo_db.users;;
+    persist_for: "1 hour"
   }
 
 
