@@ -2,11 +2,15 @@ view: users_pdt_scratch_schem_test {
 
   derived_table: {
     sql:
-    SELECT state, gender FROM demo_db.users;;
+    SELECT state, gender FROM demo_db.users
+    where date(created_at) >= (case when {% parameter date_param %} is null then  '2016-01-01' else {% parameter date_param %} end)  ;;
     persist_for: "1 hour"
   }
 
-
+  parameter: date_param {
+    type: date
+    #
+  }
   dimension: id {
     primary_key: yes
     type: number

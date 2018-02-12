@@ -1,4 +1,4 @@
-view: users {
+view: users_new {
   sql_table_name: demo_db.users ;;
 
   dimension: id {
@@ -15,6 +15,8 @@ view: users {
   dimension: city {
     type: string
     sql: ${TABLE}.city ;;
+    suggest_explore: new_users_pdt
+    suggest_dimension: city
   }
 
   dimension: country {
@@ -60,6 +62,36 @@ view: users {
   dimension: state {
     type: string
     sql: ${TABLE}.state ;;
+    suggest_explore: new_users_pdt
+    suggest_dimension: state
+  }
+
+  dimension: state_case {
+    case: {
+      when: {
+        label: "California"
+        sql: ${TABLE}.state = "California" OR ${TABLE}.state = "Oregon" ;;
+      }
+      when: {
+        label: "New York"
+        sql: ${TABLE}.state = "New York" ;;
+      }
+      else: "Other"
+    }
+  }
+
+  dimension: city_case {
+    case: {
+      when: {
+        label: "San Jose"
+        sql: ${TABLE}.city = "San Jose" ;;
+      }
+      when: {
+        label: "Yonkers"
+        sql: ${TABLE}.state = "Yonkers" ;;
+      }
+      else: "Other"
+    }
   }
 
   dimension: zip {

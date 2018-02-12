@@ -108,6 +108,18 @@ view: products {
   dimension: department {
     type: string
     sql: ${TABLE}.department ;;
+    # link: {
+    #   label: "{% if _model._name == 'thelook' %} foo {% else %} bar {% endif %}"
+    #   url: "https://self-signed.looker.com:9999/dashboards/8"
+    # }
+    link: {
+      label: "{{ products.brand._value }}"
+      url: "https://self-signed.looker.com:9999/dashboards/8"
+    }
+    # link: {
+    #   label: "test"
+    #   url: "https://self-signed.looker.com:9999/dashboards/8/{{ value }}"
+    # }
   }
 
   dimension: item_name {

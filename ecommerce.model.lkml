@@ -16,8 +16,10 @@ include: "users_nn.view"
 include: "orders_two.view"
 include: "max_date_dt.view"
 include: "users_facts.view"
+include: "users_new.view"
+include: "new_users_pdt.view"
 
-
+########
 ##
 
 # include all the dashboards
@@ -147,3 +149,7 @@ explore: orders_with_users {
     type: left_outer
   }
 }
+
+explore: users_new {
+}
+explore: new_users_pdt {}

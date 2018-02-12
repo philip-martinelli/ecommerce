@@ -2,9 +2,9 @@ view: users {
   sql_table_name: demo_db.users ;;
   label: "users alias"
 
-#   filter: test_filter {
-#     type: unquoted
-#   }
+  filter: test_filter {
+    type: string
+  }
 
   dimension: test_dim {
     type: number
@@ -67,7 +67,7 @@ view: users {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
-    can_filter: no
+
   }
 
   dimension: exists_corr_sq {
@@ -75,11 +75,18 @@ view: users {
     sql: CASE WHEN EXISTS (SELECT o.user_id FROM orders o WHERE o.user_id = users.id) THEN "Has Order" ELSE "Doesn't"  END ;;
   }
 
+  filter: is_ca_filter {
+    type: yesno
+  }
+
   dimension: is_ca {
     type: yesno
     #sql: ${state} = {% parameter users.state_param %} ;;
-    sql: ${state} = '{{ _user_attributes['state'] }}' ;;
+    sql: ${state} = "California" ;;
+
   }
+
+  # '{{ _user_attributes['state'] }}'
 
   measure: max_date_w_filters_one {
     type: date
@@ -219,8 +226,23 @@ view: users {
     type: yesno
     sql:
         EXISTS(
-                SELECT ${TABLE}.id from ${TABLE} as o WHERE users.id = o.user_id
+                SELECT orders.id from orders as o WHERE users.id = o.user_id
               )
+    ;;
+  }
+
+  dimension: has_order_in_past_30_days {
+    type: yesno
+    sql:
+  EXISTS(
+          select
+              o.user_id
+            from orders as o
+            WHERE users.id = o.user_id
+            AND
+            (((o.created_at ) >= ((CONVERT_TZ(DATE_ADD(DATE(CONVERT_TZ(orders.created_at,'America/Chicago','America/Juneau')),INTERVAL -29 day),'America/Juneau','America/Chicago')))
+            AND (o.created_at) < ((CONVERT_TZ(DATE_ADD(DATE_ADD(DATE(CONVERT_TZ(orders.created_at,'America/Chicago','America/Juneau')),INTERVAL -30 day),INTERVAL 30 day),'America/Juneau','America/Chicago')))))
+          )
     ;;
   }
 

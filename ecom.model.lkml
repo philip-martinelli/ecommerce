@@ -23,7 +23,7 @@ explore: order_items {
   join: orders {
     relationship: many_to_one
     sql_on: ${orders.id} = ${order_items.order_id} ;;
-  }
+  }####
 
 #
   join: users {
@@ -43,8 +43,7 @@ explore: orders {
     join: order_items {
       relationship: one_to_many
      # type: left_outer
-      sql_on: ${orders_two.id} = ${order_items.order_id}
-      --AND {% condition orders_two.created_date %} ${order_items.returned_date} {% endcondition %}
+      sql_on: ${orders_two.id} = ${order_items.order_id} AND {% condition orders_two.created_date %} ${order_items.returned_date} {% endcondition %}
       ;;
     }
 
@@ -79,9 +78,9 @@ explore: orders {
     fields: [ALL_FIELDS*]
     join: orders {
       relationship: one_to_many
-      fields: [orders.created_date,orders.user_id]
+      #fields: [orders.created_date,orders.user_id]
       type: left_outer
-      sql_on: ${users.id} = ${orders.user_id} ;;
+      sql_on: ${users.id} = ${orders.user_id} AND {% condition users.test_filter %} ${users.state} {% endcondition %};;
     }
   }
 
@@ -98,3 +97,4 @@ explore: orders {
 
 explore:ndt_test{}
 explore: param_dt {}
+explore: users_pdt_scratch_schem_test {}

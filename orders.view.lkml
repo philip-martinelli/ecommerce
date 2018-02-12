@@ -57,7 +57,13 @@ sql_table_name: demo_db.orders ;;
       day_of_month,
       day_of_week
     ]
+    convert_tz: no
     sql: ${TABLE}.created_at ;;
+  }
+
+  dimension: created_last_day_of_week {
+    type: date
+    sql: DATE_ADD(${created_week}, INTERVAL 7 DAY);;
   }
 
   dimension: week_day {
