@@ -336,6 +336,25 @@ view: users {
 #     type: yesno
 #     sql: ${count} > 1 ;;
 #   }
+measure: sum {
+  type: sum
+  sql: ${id} ;;
+}
+
+parameter: measure_toggle {
+  type: unquoted
+  suggestions: ["count","sum"]
+}
+
+measure: dynamic_measure {
+  label: "{% parameter measure_toggle %}"
+type: number
+sql:
+    CASE WHEN '{% parameter measure_toggle %}' = 'count' THEN ${count}
+          WHEN '{% parameter measure_toggle %}' = 'sum' THEN ${sum}
+          END
+;;
+}
 
 
 

@@ -64,6 +64,7 @@ view: users_new {
     sql: ${TABLE}.state ;;
     suggest_explore: new_users_pdt
     suggest_dimension: state
+    suggest_persist_for: "10 seconds"
   }
 
   dimension: state_case {
