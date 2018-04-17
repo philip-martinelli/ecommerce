@@ -1,5 +1,55 @@
 view: users_new {
-  sql_table_name: demo_db.users ;;
+  # sql_table_name: demo_db.users ;;
+  derived_table: {
+    sql:
+    select * from users
+    where
+    {% assign var=_filters['users_new.state_filter'] %}
+   {% if var == "" %}
+  state = "California"
+  {% else %}
+  {% condition state_filter %} state {% endcondition %}
+    {% endif %}
+    ;;
+
+    persist_for: "24 hours"
+  }
+  filter: state_filter {
+    type: string
+  }
+  parameter: state_list {
+    type: string
+    allowed_value: {
+      label: "CA"
+      value: "California"
+    }
+    allowed_value: {
+      label: "OR"
+      value: "Oregon"
+    }
+    allowed_value: {
+      label: "Other"
+      value: "Other"
+    }
+    }
+
+    dimension: State_yesno_test {
+      type: yesno
+      sql:
+          CASE WHEN {% parameter state_list %} = "California" THEN ${state} = "California"
+                WHEN {% parameter state_list %} = "Oregon" THEN ${state} = "Oregon"
+                ELSE ${state} != "California" AND ${state} != "Oregon" END
+      ;;
+    }
+
+  dimension: State_yesno_test_string {
+    type: string
+    sql:
+          CASE WHEN {% parameter state_list %} = "California" THEN ${state}
+                WHEN {% parameter state_list %} = "Oregon" THEN ${state}
+                ELSE ${state} != "California" AND ${state} != "Oregon" END
+      ;;
+  }
 
   dimension: id {
     primary_key: yes
@@ -13,6 +63,8 @@ view: users_new {
   }
 
   dimension: city {
+    view_label: "Orders Test"
+    group_label: "Group Label"
     type: string
     sql: ${TABLE}.city ;;
     suggest_explore: new_users_pdt
@@ -20,9 +72,23 @@ view: users_new {
   }
 
   dimension: country {
+    view_label: "Orders Test"
+    group_label: "Group Label"
     type: string
     map_layer_name: countries
     sql: ${TABLE}.country ;;
+  }
+
+  parameter: date_param {
+    type: date
+  }
+
+  dimension: windows {
+    type: string
+    sql:
+    case when ${created_date} >= (date_add({% parameter date_param %}, interval -28 day)) AND ${created_date} < date_add({% parameter date_param %},interval 1 day) then "window one"
+    when ${created_date} < (date_add({% parameter date_param %}, interval -28 day)) AND ${created_date} >= (date_add({% parameter date_param %}, interval -56 day)) then "window two" end ;;
+    convert_tz: no
   }
 
   dimension_group: created {
@@ -42,6 +108,12 @@ view: users_new {
   dimension: email {
     type: string
     sql: ${TABLE}.email ;;
+  }
+
+
+  dimension: case_test_two {
+    type: string
+    sql: case when ${state} = 'California' then ${state} else ${city} ;;
   }
 
   dimension: first_name {
@@ -95,13 +167,43 @@ view: users_new {
     }
   }
 
+  dimension: dynamic_dim {
+    type: string
+    sql:
+    {% if users_new.sum_states._in_query %}
+${state}
+{% else %}
+${zip}
+{% endif %}
+    ;;
+  }
+
   dimension: zip {
+    view_label: "Orders Test"
+    group_label: "Group Label"
     type: zipcode
     sql: ${TABLE}.zip ;;
   }
 
-  measure: count {
+  dimension: orders_field {
+    type: string
+    sql: ${orders.id} ;;
+  }
+
+  dimension: state_yesno {
+    type: yesno
+    sql: {% condition state_filter %}  ${state} {% endcondition %} ;;
+  }
+
+  measure: sum_states {
     type: count
-    drill_fields: [id, last_name, first_name]
+  }
+
+  measure: sum_filtered_states {
+    type: count
+   filters: {
+     field: state_yesno
+    value: "yes"
+   }
   }
 }

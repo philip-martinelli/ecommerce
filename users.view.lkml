@@ -10,10 +10,24 @@ view: users {
     type: number
     sql: ${TABLE}.id/1/2/(case when "{% parameter param_exampe %}" = "State" then 3 else 4 end);;
   }
-
+  dimension: case_test_two {
+    type: string
+    sql: case when ${state} = 'California' then ${state} else ${city} end ;;
+  }
   dimension: test_dim_test {
     type: number
     sql: ${TABLE}.id/1/2/3 ;;
+  }
+  filter: state_f {}
+
+  dimension: abc {
+    type: string
+    sql:
+    case when {% condition state_f %} 'California' {% endcondition  %} then ${city}
+        when {% condition state_f %} 'Oregon' {% endcondition  %} then ${city}
+        when {% condition state_f %} 'Washington' {% endcondition  %} then ${city}
+        else null end
+    ;;
   }
 
   dimension: dynamic_column {
@@ -22,11 +36,12 @@ view: users {
   }
 
   parameter: param_exampe {
-    type: unquoted
-    allowed_value: {
-      label: "state"
-      value: "State"
-    }
+    type: number
+  }
+
+  measure: param_meas {
+    type: number
+    sql: (select id from users where id/{% parameter param_exampe %} = 30) ;;
   }
 
   parameter: param_example {
@@ -105,14 +120,13 @@ view: users {
 
   }
 
-  measure: count_format {
+
+  measure: count_formatted {
     type: string
-    sql: ${count} ;;
-    html: {% if value > 16000 %}
-           <p style="color: black; background-color: lightblue; font-size:50%; text-align:center">{{value}}</p>
-           {% else %}
-            <p style="color: black; background-color: lightgreen; font-size:50%; text-align:center">{{value}}</p>
-          {% endif %} ;;
+    sql:
+        CASE WHEN ${count} > 900 THEN concat('$',${count})
+        ELSE concat(round(${count}/100,2),'%') END
+    ;;
   }
 
   dimension: state_pic {
@@ -127,9 +141,22 @@ view: users {
   dimension: city {
     type: string
     sql: ${TABLE}.city ;;
+    order_by_field: city_sort
     #map_layer_name: state_layer
   }
+dimension: city_sort {
+    type: string
+    hidden: yes
+    sql:
+    case when
+            ${city} = "San Jose" then "a"
+            when ${city} = "Los Angeles" then "c"
+            when ${city} = "Atlanta" then "b"
 
+            end
+    ;;
+
+    }
 
   dimension: city_name {
     type: string
@@ -179,11 +206,6 @@ view: users {
   dimension: gender {
     type: string
     sql: ${TABLE}.gender ;;
-  }
-
-  dimension: last_name {
-    type: string
-    sql: ${TABLE}.last_name ;;
     html:
     {% if value == 'm' %}
     <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
@@ -191,6 +213,26 @@ view: users {
     <p style="color: black; background-color: lightgreen; font-size:100%; text-align:center">{{ rendered_value }}</p>
     {% endif %}
     ;;
+
+  }
+
+  dimension: is_female {
+    type: yesno
+    sql: ${gender} = "f" ;;
+    html:
+    {% if value == true %}
+    <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ value }}</p>
+    {% elsif value == false %}
+    <p style="color: black; background-color: lightgreen; font-size:100%; text-align:center">{{ value }}</p>
+    {% endif %}
+    ;;
+
+  }
+
+  dimension: last_name {
+    type: string
+    sql: ${TABLE}.last_name ;;
+
   }
 
   dimension: state {
@@ -313,6 +355,7 @@ view: users {
 
   measure: count {
     type: count
+
   }
   measure: yesno_count {
     type: yesno

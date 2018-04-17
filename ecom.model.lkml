@@ -17,6 +17,7 @@ include: "orders_two.view"
 include: "max_date_dt.view"
 include: "orders_ndt.view"
 include: "param_dt.view"
+week_start_day: sunday
 
 explore: order_items {
   sql_always_where: ${users.state} <> "California" ;;
@@ -37,6 +38,10 @@ explore: order_items {
 
 
 explore: orders {
+#   access_filter: {
+#     field: orders.id
+#     user_attribute: idd
+#   }
 }
 
   explore: orders_two {
@@ -76,7 +81,16 @@ explore: orders {
 
   explore: users {
     fields: [ALL_FIELDS*]
+#     access_filter: {
+#       field: state
+#       user_attribute: state
+#     }
+#     access_filter: {
+#       field: id
+#       user_attribute: idd
+#     }
     join: orders {
+      fields: []
       relationship: one_to_many
       #fields: [orders.created_date,orders.user_id]
       type: left_outer
@@ -98,3 +112,6 @@ explore: orders {
 explore:ndt_test{}
 explore: param_dt {}
 explore: users_pdt_scratch_schem_test {}
+
+include: "pdt_dev_mode.view"
+explore: pdt_dev_mode {}
