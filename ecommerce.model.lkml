@@ -2,21 +2,22 @@ connection: "thelook"
 
 # include all the views
 include: "*.view"
-# include: "order_items.view"
-# include: "orders.view"
-# include: "products.view"
-# include: "users.view"
-# include: "events.view"
-# include: "inventory_items.view"
-# include: "schema_migrations.view"
-# include: "orders_extended.view"
-# include: "user_data.view"
-# include: "users_pdt.view"
-# include: "users_nn.view"
-# include: "max_date_dt.view"
+include: "order_items.view"
+include: "orders.view"
+include: "products.view"
+include: "users.view"
+include: "events.view"
+include: "inventory_items.view"
+include: "schema_migrations.view"
+include: "orders_extended.view"
+include: "user_data.view"
+include: "users_pdt.view"
+include: "users_nn.view"
+include: "max_date_dt.view"
 
 
 
+# yeah
 
 # include all the dashboards
 include: "*.dashboard"

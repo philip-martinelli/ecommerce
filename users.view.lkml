@@ -1,6 +1,5 @@
 view: users {
   sql_table_name: demo_db.users ;;
-  label: "users alias"
 
   dimension: id {
     primary_key: yes
@@ -20,8 +19,22 @@ view: users {
   dimension: city {
     type: string
     sql: ${TABLE}.city ;;
+    drill_fields: [orders.id]
+    order_by_field: city_sort
     #map_layer_name: state_layer
+  }
 
+  dimension: city_sort {
+    type: string
+    hidden: yes
+    sql:
+    case when
+            ${city} = "San Jose" then "a"
+            when ${city} = "Los Angeles" then "b"
+            when ${city} = "Atlanta" then "c"
+
+            end
+    ;;
   }
 
   measure: max_date {
@@ -133,6 +146,7 @@ view: users {
   }
 
   measure: all_users {
+    drill_fields: [last_name]
     type: number
     sql: ${count_users_with_orders} + ${count_users_without_orders} ;;
     link: {
