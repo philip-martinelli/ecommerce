@@ -63,8 +63,6 @@ view: users_new {
   }
 
   dimension: city {
-    view_label: "Orders Test"
-    group_label: "Group Label"
     type: string
     sql: ${TABLE}.city ;;
     suggest_explore: new_users_pdt
@@ -72,8 +70,6 @@ view: users_new {
   }
 
   dimension: country {
-    view_label: "Orders Test"
-    group_label: "Group Label"
     type: string
     map_layer_name: countries
     sql: ${TABLE}.country ;;
@@ -179,8 +175,6 @@ ${zip}
   }
 
   dimension: zip {
-    view_label: "Orders Test"
-    group_label: "Group Label"
     type: zipcode
     sql: ${TABLE}.zip ;;
   }

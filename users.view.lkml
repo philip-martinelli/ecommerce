@@ -332,6 +332,11 @@ dimension: city_sort {
     }
   }
 
+  measure: state_s {
+    type: string
+    sql: ${state} ;;
+  }
+
   dimension: state_test {
     type: string
     sql: ${TABLE}.state ;;
@@ -355,7 +360,8 @@ dimension: city_sort {
 
   measure: count {
     type: count
-
+html:
+<p style="color: white >{{ rendered_value }}</p>;;
   }
   measure: yesno_count {
     type: yesno
@@ -399,6 +405,10 @@ sql:
 ;;
 }
 
+  dimension: user_att_city {
+    type: string
+    sql: "{{ _user_attributes['city'] }}" ;;
+  }
 
 
 set: basic {

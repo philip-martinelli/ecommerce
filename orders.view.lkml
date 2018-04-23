@@ -268,4 +268,13 @@ convert_tz: no
     ;;
   }
 
+dimension: first_order_in_created_month {
+    type: yesno
+    sql:
+    ${created_month} = (select (date_format(min(o.created_at),'%Y-%m')) from orders o where o.user_id = ${users_plus_first_order_dt.id})
+
+    ;;
+
+}
+
 }

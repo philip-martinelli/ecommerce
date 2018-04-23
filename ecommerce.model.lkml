@@ -84,6 +84,7 @@ explore: order_items {
 # }
 
 explore: products {
+  sql_always_where: ${category} = 'Active' ;;
   join: inventory_items {
     type: left_outer
     relationship: one_to_many

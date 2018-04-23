@@ -39,10 +39,23 @@ view: order_items {
   }
 
   measure: sum_sale {
+    label: "sum of all orders"
     type: sum
-    sql: (0 - ${sale_price}) ;;
-    value_format: "$#,##0.00;($#,##0.00)"
+    sql: ${sale_price} ;;
+    value_format: "$#,##0.00"
   }
+
+measure: sum_sale_first_orders {
+  label: "sum of first purchase month orders"
+  description: "sum of orders whose first time purchase is the selected month"
+  type: sum
+  sql: ${sale_price};;
+  value_format: "$#,##0.00"
+  filters: {
+    field:orders.first_order_in_created_month
+    value: "yes"
+  }
+}
 
   measure: count {
     type: count

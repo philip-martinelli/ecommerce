@@ -90,3 +90,17 @@ explore: users {
     sql_on: ${users.id}=${orders.user_id} AND {% condition users.created_date %} ${orders.created_date} {% endcondition %};;
   }
 }
+
+include: "users_first_order.view"
+explore: users_plus_first_order_dt {
+  join: orders {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${users_plus_first_order_dt.id} = ${orders.user_id} ;;
+  }
+  join: order_items {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${order_items.order_id} = ${orders.id} ;;
+  }
+}
