@@ -5,6 +5,27 @@ sql_table_name: demo_db.orders ;;
     type: unquoted
   }
 
+  measure: sum_test {
+    type: sum
+    sql: ${id}/{% parameter test %} ;;
+  }
+
+  filter: status_filter_test{
+    type: string
+    sql: ${status} = "complete" ;;
+  }
+
+dimension: filter_option {
+
+  type: string
+  sql: "one" ;;
+  html:
+          {% assign vartwo= "This filter is used to filter all dates for the past " %}
+          {% assign var=  _filters['orders.created_date'] %}
+          {{ vartwo | append: var}}
+  ;;
+}
+
   measure: date_min {
     type: date
     sql: min(${TABLE}.created_at) ;;
@@ -16,6 +37,7 @@ sql_table_name: demo_db.orders ;;
   }
 
   dimension: id {
+    label: "Group Label"
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
@@ -45,9 +67,41 @@ sql_table_name: demo_db.orders ;;
       quarter,
       year,
       day_of_month,
-      day_of_week
+      day_of_week,
+      week_of_year
     ]
+    convert_tz: no
     sql: ${TABLE}.created_at ;;
+  }
+
+  dimension: case_year {
+    case: {
+      when: {
+        label: "2017"
+        sql: ${created_year} = 2017 OR (${created_year} = 2016 AND ${created_week_of_year} < 52 ;;
+
+        #  when (curdate()) - 12) < 1  then   (case when year(curdate) = created year then created  year else year(dateadd(created_date -1 year))
+
+        #when week of year of now minus period < 1, attribute lagging weeks from past year to current year
+        # when week of year of minus minus period >= 1, all gucci fam
+      }
+      when: {
+        label: "2018"
+        sql: ${created_year} = 2018  ;;
+      }
+    }
+  }
+
+  dimension: year_test {
+    type: string
+    sql: CASE when (weekofyear(curdate()) - 12) < 1  then   (case when ${created_week_of_year} <= 53 and ${created_week_of_year} >  then year(date_add(${TABLE}.created_at, interval 1 year)) else ${created_year} end)
+          else ${created_year} end
+ ;;
+  }
+
+  dimension: created_last_day_of_week {
+    type: date
+    sql: DATE_ADD(${created_week}, INTERVAL 7 DAY);;
   }
 
   dimension: week_day {
@@ -59,7 +113,7 @@ sql_table_name: demo_db.orders ;;
     {% elsif value == 'Sunday' %}
     <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
     {% else %}
-    <p style="color: black; background-color: orange; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    <p style="color:orange">{{ rendered_value }}</p>
     {% endif %}
     ;;
   }
@@ -83,8 +137,16 @@ sql_table_name: demo_db.orders ;;
   }
 
   dimension: status {
+    label: "STATUS"
     type: string
-    sql: ${TABLE}.status ;;
+    sql: UPPER(${TABLE}.status) ;;
+  }
+  measure: status_agg {
+    type: count
+    filters: {
+      field: status
+      value: "complete"
+    }
   }
 
   dimension: status_two {
@@ -101,11 +163,11 @@ sql_table_name: demo_db.orders ;;
 
   measure: count {
     type: count
-    drill_fields: [id,order_items.count]
-    link: {
-      label: "test"
-      url: "/explore/ecommerce/users?fields=users.state,users.count,&f[users.created_date]={{ _filters['orders.created_date'] | url_encode }}"
-      }
+    drill_fields: [users.state]
+#     link: {
+#       label: "test"
+#       url: "/explore/ecommerce/users?fields=users.state,users.count,&f[users.created_date]={{ _filters['orders.created_date'] | url_encode }}"
+#       }
   }
 
   measure: count_test {
@@ -184,6 +246,26 @@ FROM users
 group by 1,2
 order by 1 desc
 Limit 100 ;;
+convert_tz: no
+  }
+
+  measure: list_type {
+    type: list
+    list_field: created_week
+  }
+
+  measure: count_format {
+    type: count
+    value_format: "0\s"
+    html:
+    {% if value < 120 %}
+    <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    {% elsif value >= 120 %}
+    <p style="color: black; background-color: lightblue; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    {% else %}
+    <p style="color: black; background-color: orange; font-size:100%; text-align:center">{{ rendered_value }}</p>
+    {% endif %}
+    ;;
   }
 
 }

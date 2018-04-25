@@ -31,3 +31,13 @@ ${orders.created_raw} = ${order_items.returned_raw}
     ;;
   }
 }
+
+explore: users {
+  sql_always_where:{% if users.param_example._in_query %}
+                    ${state} = (SELECT state from users WHERE {% parameter users.param_exampe %}
+                  {% else %}
+                  1=1
+                  {% endif %};;
+
+
+}

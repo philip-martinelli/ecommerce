@@ -1,5 +1,5 @@
 
-  include: "ecom.model"
+#  include: "ecom.model"
 
   view: ndt_test {
     derived_table: {

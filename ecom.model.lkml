@@ -19,12 +19,13 @@ include: "orders_ndt.view"
 include: "param_dt.view"
 include: "random_pdt.view"
 
+
 explore: order_items {
   sql_always_where: ${users.state} <> "California" ;;
   join: orders {
     relationship: many_to_one
     sql_on: ${orders.id} = ${order_items.order_id} ;;
-  }
+  }####
 
 #
   join: users {
@@ -38,14 +39,17 @@ explore: order_items {
 
 
 explore: orders {
+#   access_filter: {
+#     field: orders.id
+#     user_attribute: idd
+#   }
 }
 
   explore: orders_two {
     join: order_items {
       relationship: one_to_many
      # type: left_outer
-      sql_on: ${orders_two.id} = ${order_items.order_id}
-      --AND {% condition orders_two.created_date %} ${order_items.returned_date} {% endcondition %}
+      sql_on: ${orders_two.id} = ${order_items.order_id} AND {% condition orders_two.created_date %} ${order_items.returned_date} {% endcondition %}
       ;;
     }
 
@@ -78,11 +82,20 @@ explore: orders {
 
   explore: users {
     fields: [ALL_FIELDS*]
+#     access_filter: {
+#       field: state
+#       user_attribute: state
+#     }
+#     access_filter: {
+#       field: id
+#       user_attribute: idd
+#     }
     join: orders {
+      fields: []
       relationship: one_to_many
-      fields: [orders.created_date,orders.user_id]
+      #fields: [orders.created_date,orders.user_id]
       type: left_outer
-      sql_on: ${users.id} = ${orders.user_id} ;;
+      sql_on: ${users.id} = ${orders.user_id} AND {% condition users.test_filter %} ${users.state} {% endcondition %};;
     }
   }
 
@@ -99,3 +112,7 @@ explore: orders {
 
 explore:ndt_test{}
 explore: param_dt {}
+explore: users_pdt_scratch_schem_test {}
+
+include: "pdt_dev_mode.view"
+explore: pdt_dev_mode {}
