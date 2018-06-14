@@ -170,14 +170,40 @@ explore: orders_test {
 #                 ELSE ${state} != "California" AND ${state} != "Oregon" END) = TRUE  ;;
 }
 explore: new_users_pdt {}
-explore: users_new {
-  fields: [users_new.id,users_new.orders_field]
-  join: orders {
-    fields: [orders.id,orders.user_id]
-    sql_on: ${orders.user_id} = ${users_new.id} ;;
-  }
-}
+# explore: users_new {
+#   fields: [users_new.id,users_new.orders_field]
+#   join: orders {
+#     fields: [orders.id,orders.user_id]
+#     sql_on: ${orders.user_id} = ${users_new.id} ;;
+#   }
+# }
 include: "extend_test.view"
 explore:extend_test_extend  {}
 include: "sql_runner_query.view"
 explore: sql_runner_query {}
+include:"users_new.view"
+explore: users_new {}
+
+explore: usersone {
+  from: users
+always_filter: {
+  filters: {
+    field: userstwo.is_ca
+    value: "yes"
+  }
+  filters: {
+    field: userstwo.state
+    value: "New York"
+  }
+  filters: {
+    field: userstwo.id
+    value: "1"
+  }
+}
+sql_always_where:
+case when {% parameter usersone.os_ca_param %} = "yes" then ${is_ca} when {% parameter usersone.os_ca_param %} = "no" then NOT ${is_ca} end   ;;
+join: userstwo {
+    from: users
+    sql_on: ${usersone.id} = ${userstwo.id} ;;
+  }
+}

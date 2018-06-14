@@ -206,4 +206,19 @@ ${zip}
     value: "yes"
    }
   }
+
+  dimension: dummy_yesno {
+    type: yesno
+    sql:
+        EXISTS (select u.id from users as u where u.id = users_new.id and u.state = "California")
+
+        AND
+
+        EXISTS (select u.id from users as u where u.id= users_new.id and date_format(u.created_at,"%Y") = "2017")
+
+    ;;
+
+
+
+  }
 }

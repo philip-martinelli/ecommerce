@@ -116,3 +116,6 @@ explore: users_pdt_scratch_schem_test {}
 
 include: "pdt_dev_mode.view"
 explore: pdt_dev_mode {}
+
+include: "liquid_madness.view"
+explore: liquid_madness {}
