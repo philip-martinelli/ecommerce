@@ -18,7 +18,7 @@ include: "max_date_dt.view"
 include: "orders_ndt.view"
 include: "param_dt.view"
 include: "random_pdt.view"
-
+##
 
 explore: order_items {
   sql_always_where: ${users.state} <> "California" ;;
