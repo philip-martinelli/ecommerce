@@ -202,8 +202,8 @@ ${zip}
   measure: sum_filtered_states {
     type: count
    filters: {
-     field: state_yesno
-    value: "yes"
+     field: state
+    value: "California"
    }
   }
 
@@ -221,4 +221,27 @@ ${zip}
 
 
   }
+
+
+  parameter: one {
+    type: unquoted
+  }
+  parameter: two {
+    type: unquoted
+  }
+  dimension: dim {
+    sql: {% if two._in_query %}
+          case when  ${state} like '%{% parameter one %}%' then 'group A'
+                when ${state} like '%{% parameter two %}%' then 'group B'
+                else "rest"
+                end
+          {% else %}
+          case when  ${state} like '%{% parameter one %}%' then 'group A'
+                else "rest"
+                end
+          {% endif %}
+    ;;
+  }
+
+
 }

@@ -23,7 +23,7 @@ include: "note_test.dashboard"
 ###Quinn's change to revert
 
 
-########
+##########
 ##
 
 # include all the dashboards
@@ -185,7 +185,8 @@ explore:extend_test_extend  {}
 include: "sql_runner_query.view"
 explore: sql_runner_query {}
 include:"users_new.view"
-explore: users_new {}
+explore: users_new {
+}
 
 explore: usersone {
   from: users
