@@ -18,19 +18,19 @@ view: users_new {
     type: string
   }
   parameter: state_list {
-    type: string
-    allowed_value: {
-      label: "CA"
-      value: "California"
-    }
-    allowed_value: {
-      label: "OR"
-      value: "Oregon"
-    }
-    allowed_value: {
-      label: "Other"
-      value: "Other"
-    }
+    type: unquoted
+#     allowed_value: {
+#       label: "CA"
+#       value: "California"
+#     }
+#     allowed_value: {
+#       label: "OR"
+#       value: "Oregon"
+#     }
+#     allowed_value: {
+#       label: "Other"
+#       value: "Other"
+#     }
     }
 
     dimension: State_yesno_test {
@@ -60,13 +60,18 @@ view: users_new {
   dimension: age {
     type: number
     sql: ${TABLE}.age ;;
+    drill_fields: [state,city,gender]
   }
-
+dimension: city_subtr {
+  type: string
+  sql: substring(${city},1,3) ;;
+}
   dimension: city {
     type: string
     sql: ${TABLE}.city ;;
-    suggest_explore: new_users_pdt
-    suggest_dimension: city
+#     suggest_explore: new_users_pdt
+html: {{ users_new.city_subtr._value }} ;;
+#     suggest_dimension: city
   }
 
   dimension: country {

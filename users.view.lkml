@@ -36,7 +36,11 @@ view: users {
   }
 
   parameter: param_exampe {
-    type: number
+    type: unquoted
+  }
+
+  dimension: t {
+    sql: "{% parameter param_exampe %}" ;;
   }
 
   measure: param_meas {

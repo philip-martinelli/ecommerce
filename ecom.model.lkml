@@ -115,3 +115,7 @@ explore: users_pdt_scratch_schem_test {}
 
 include: "pdt_dev_mode.view"
 explore: pdt_dev_mode {}
+include: "users_new.view"
+explore: users_new {}
+include: "liquid_array_sql_gen.view"
+explore: liquid_array_sql_gen {}
