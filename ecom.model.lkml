@@ -116,6 +116,8 @@ explore: users_pdt_scratch_schem_test {}
 include: "pdt_dev_mode.view"
 explore: pdt_dev_mode {}
 include: "users_new.view"
-explore: users_new {}
+explore: users_new {
+  fields: [ALL_FIELDS*,-users_new.city]
+}
 include: "liquid_array_sql_gen.view"
 explore: liquid_array_sql_gen {}

@@ -205,4 +205,32 @@ ${zip}
     value: "yes"
    }
   }
+
+  filter: type {
+    type: string
+  }
+
+  measure: count_a {
+    type: count_distinct
+    sql: ${id} ;;
+    value_format: "0 \" format one\"" # Integer followed by a string (123 String)
+    }
+  measure: count_b {
+    type: count_distinct
+    sql: ${id};;
+    value_format: "0 \" format two\"" # Integer followed by a string (123 String)
+    }
+
+  measure: count {
+    type: number
+    sql: case when  {% condition type %} '1' {% endcondition %} then ${count_a}
+      else ${count_b} end;;
+    html:
+          {% if _filters['users_new.type'] == "1" %}
+           {{ count_a._rendered_value }}
+           {% else %}
+           {{ count_b._rendered_value }}
+           {% endif %}
+     ;;
+  }
 }
