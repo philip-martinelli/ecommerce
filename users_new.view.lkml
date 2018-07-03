@@ -70,7 +70,7 @@ dimension: city_subtr {
     type: string
     sql: ${TABLE}.city ;;
 #     suggest_explore: new_users_pdt
-html: {{ users_new.city_subtr._value }} ;;
+#html: {{ users_new.city_subtr._value }} ;;
 #     suggest_dimension: city
   }
 
@@ -182,7 +182,14 @@ ${zip}
   dimension: zip {
     type: zipcode
     sql: ${TABLE}.zip ;;
+    html:
+    {% assign dynamic_domain = _user_attributes['domain'] | prepend: "https://" | append: "/explore/ecom/users_new" %}
+    <a href="{{ dynamic_domain }}?fields=users_new.city&f[users_new.city]={{ _filters['users_new.city'] | url_encode }}" >{{value}}</a> ;;
+
   }
+
+  #<a href={{ dynamic_domain }}>{{value}}</a> ;;
+  #<%# {{dynamic_domain}} + Eval("?fields=users_new.city").ToString() %>
 
   dimension: orders_field {
     type: string
@@ -206,7 +213,7 @@ ${zip}
    }
   }
 
-  filter: type {
+  parameter: type {
     type: string
   }
 
@@ -223,8 +230,9 @@ ${zip}
 
   measure: count {
     type: number
-    sql: case when  {% condition type %} '1' {% endcondition %} then ${count_a}
+    sql: case when  {% parameter type %} = "1" then ${count_a}
       else ${count_b} end;;
+#     html: {{ _filters['users_new.type'] }} ;;
     html:
           {% if _filters['users_new.type'] == "1" %}
            {{ count_a._rendered_value }}
@@ -233,4 +241,37 @@ ${zip}
            {% endif %}
      ;;
   }
+
+
+#   parameter: type {
+#     type: string
+#   }
+#
+#   dimension: type_dim {
+#     sql: {% parameter type %} ;;
+#   }
+#
+#   measure: count_a {
+#     type: count_distinct
+#     sql: ${id} ;;
+#     value_format: "0"
+#   }
+#   measure: count_b {
+#     type: count_distinct
+#     sql: ${id};;
+#     value_format: "0.00/%"
+#   }
+#
+#   measure: count {
+#     type: number
+#     sql: case when  {% parameter type %} = '1' then ${count_a}
+#       else ${count_b} end;;
+#
+#     html: {% if users.type._value == "1" %}
+#           {{ count_a._rendered_value }}
+#           {% else %}
+#           {{ count_b._rendered_value }}
+#           {% endif %}
+#     ;;
+#   }
 }

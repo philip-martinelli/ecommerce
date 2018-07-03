@@ -117,7 +117,7 @@ include: "pdt_dev_mode.view"
 explore: pdt_dev_mode {}
 include: "users_new.view"
 explore: users_new {
-  fields: [ALL_FIELDS*,-users_new.city]
+  fields: [ALL_FIELDS*]
 }
 include: "liquid_array_sql_gen.view"
 explore: liquid_array_sql_gen {}
