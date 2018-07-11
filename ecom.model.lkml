@@ -79,24 +79,24 @@ explore: orders {
 
 
 
-  explore: users {
-    fields: [ALL_FIELDS*]
-#     access_filter: {
-#       field: state
-#       user_attribute: state
+#   explore: users {
+#     fields: [ALL_FIELDS*]
+# #     access_filter: {
+# #       field: state
+# #       user_attribute: state
+# #     }
+# #     access_filter: {
+# #       field: id
+# #       user_attribute: idd
+# #     }
+#     join: orders {
+#       fields: []
+#       relationship: one_to_many
+#       #fields: [orders.created_date,orders.user_id]
+#       type: left_outer
+#       sql_on: ${users.id} = ${orders.user_id} AND {% condition users.test_filter %} ${users.state} {% endcondition %};;
 #     }
-#     access_filter: {
-#       field: id
-#       user_attribute: idd
-#     }
-    join: orders {
-      fields: []
-      relationship: one_to_many
-      #fields: [orders.created_date,orders.user_id]
-      type: left_outer
-      sql_on: ${users.id} = ${orders.user_id} AND {% condition users.test_filter %} ${users.state} {% endcondition %};;
-    }
-  }
+#   }
 
   map_layer: zip_layer {
     property_key: "id"
@@ -118,6 +118,12 @@ explore: pdt_dev_mode {}
 include: "users_new.view"
 explore: users_new {
   fields: [ALL_FIELDS*]
+  access_filter: {
+    field: state
+    user_attribute: state
+  }
 }
 include: "liquid_array_sql_gen.view"
 explore: liquid_array_sql_gen {}
+include: "users_ndt.view"
+explore: users_ndt {}

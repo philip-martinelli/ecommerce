@@ -343,7 +343,12 @@ dimension: city_sort {
 
   dimension: state_test {
     type: string
-    sql: ${TABLE}.state ;;
+    sql: "sadbgdsbgkdsbgkkfdbgkfhhhhhhhhhhhhhhhhhhhggggggggggggggggggggggfffffffsdbfgbdsfkgbsdfglksdfbglhsdbfglkhbsdflkghbsldkhfbglsdhbfglkjjjjjjjjjjjjjjjjjhhhhhggggggffffsdhbfg" ;;
+    #sql: ${TABLE}.state ;;
+    link: {
+      label: "test"
+      url: "https://self-signed.looker.com:9999/explore/ecommerce/"
+    }
   }
 
   measure: percent_of_t {

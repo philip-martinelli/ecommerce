@@ -18,6 +18,8 @@ include: "max_date_dt.view"
 include: "users_facts.view"
 include: "users_new.view"
 include: "new_users_pdt.view"
+include: "user_Cross.view"
+
 include: "note_test.dashboard"
 ##
 ########
@@ -110,6 +112,9 @@ explore: users {
     sql_on: ${users.id}=${orders.user_id} ;;
     relationship: one_to_many
     type: left_outer
+  }
+  join: user_cross {
+type: cross
   }
 }
 

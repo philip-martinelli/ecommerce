@@ -203,6 +203,7 @@ ${zip}
 
   measure: sum_states {
     type: count
+    value_format: "\" $ \" 0"
   }
 
   measure: sum_filtered_states {
