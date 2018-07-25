@@ -18,7 +18,7 @@ include: "max_date_dt.view"
 include: "orders_ndt.view"
 include: "param_dt.view"
 include: "random_pdt.view"
-
+##
 
 explore: order_items {
   sql_always_where: ${users.state} <> "California" ;;
@@ -116,3 +116,6 @@ explore: users_pdt_scratch_schem_test {}
 
 include: "pdt_dev_mode.view"
 explore: pdt_dev_mode {}
+
+include: "liquid_madness.view"
+explore: liquid_madness {}

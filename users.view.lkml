@@ -1,6 +1,5 @@
 view: users {
   sql_table_name: demo_db.users ;;
-  label: "users alias"
 
   filter: test_filter {
     type: string
@@ -94,6 +93,10 @@ view: users {
     type: yesno
   }
 
+  parameter: os_ca_param {
+    type: string
+  }
+
   dimension: is_ca {
     type: yesno
     #sql: ${state} = {% parameter users.state_param %} ;;
@@ -142,6 +145,7 @@ view: users {
     type: string
     sql: ${TABLE}.city ;;
     order_by_field: city_sort
+    drill_fields: [state,age]
     #map_layer_name: state_layer
   }
 dimension: city_sort {
@@ -177,7 +181,8 @@ dimension: city_sort {
   }
 
   dimension_group: created {
-    label: "Event "
+#     label: "Event "
+#group_label: "Created Date"
     type: time
     timeframes: [
       raw,
@@ -191,6 +196,20 @@ dimension: city_sort {
       month_name
     ]
     sql: ${TABLE}.created_at ;;
+  }
+
+  dimension: week_format {
+    type: string
+    sql:  DATE_FORMAT(date(${created_week}), "%m-%d-%Y") ;;
+  }
+
+  dimension: week {
+    group_label: "Created Date"
+    label: "Week Formatted"
+    type: date
+    #timeframes: [week]
+    sql: ${created_week} ;;
+    html: {{ week_format._value }} ;;
   }
 
   dimension: email {
@@ -355,7 +374,7 @@ dimension: city_sort {
 
   measure: count {
     type: count
-
+drill_fields: [state,city]
   }
   measure: yesno_count {
     type: yesno
@@ -397,6 +416,45 @@ sql:
           WHEN '{% parameter measure_toggle %}' = 'sum' THEN ${sum}
           END
 ;;
+}
+
+filter: state_filt {
+  type: string
+}
+measure: count_temp {
+  type: count_distinct
+  sql: CASE WHEN {% condition state_filt %} ${state} {% endcondition %} then ${id} end;;
+}
+measure: count_d {
+  type: count_distinct
+  sql: ${id} ;;
+}
+
+dimension:  liquid_lookm_standoff_field_to_be_filtered {
+  type: string
+  sql: users.{% parameter blah %} ;;
+}
+
+dimension: liquid_lookm_standoff_field_to_be_selected {
+  type: string
+  sql: ${liquid_lookm_standoff_field_to_be_filtered} ;;
+}
+
+parameter: blah {
+  type: unquoted
+}
+
+dimension: dim {
+  sql: ${blah} ;;
+}
+
+dimension: dyn {
+  sql:
+      {% if _field._name == dim._value  %}
+     {{ _field._name }}
+      {% endif %}
+
+  ;;
 }
 
 

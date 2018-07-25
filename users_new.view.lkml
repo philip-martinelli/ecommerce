@@ -202,8 +202,46 @@ ${zip}
   measure: sum_filtered_states {
     type: count
    filters: {
-     field: state_yesno
-    value: "yes"
+     field: state
+    value: "California"
    }
   }
+
+  dimension: dummy_yesno {
+    type: yesno
+    sql:
+        EXISTS (select u.id from users as u where u.id = users_new.id and u.state = "California")
+
+        AND
+
+        EXISTS (select u.id from users as u where u.id= users_new.id and date_format(u.created_at,"%Y") = "2017")
+
+    ;;
+
+
+
+  }
+
+
+  parameter: one {
+    type: unquoted
+  }
+  parameter: two {
+    type: unquoted
+  }
+  dimension: dim {
+    sql: {% if two._in_query %}
+          case when  ${state} like '%{% parameter one %}%' then 'group A'
+                when ${state} like '%{% parameter two %}%' then 'group B'
+                else "rest"
+                end
+          {% else %}
+          case when  ${state} like '%{% parameter one %}%' then 'group A'
+                else "rest"
+                end
+          {% endif %}
+    ;;
+  }
+
+
 }

@@ -1,5 +1,6 @@
 - dashboard: note_test
   title: Note Test
+  description: 'desired dashboard description'
   layout: tile
   tile_size: 100
 
